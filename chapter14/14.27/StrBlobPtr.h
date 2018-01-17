@@ -36,16 +36,6 @@ public:
     StrBlobPtr& operator++();
     StrBlobPtr& operator++(int);
 
-    string& operator*()const
-    {
-        auto ptr = check(_curr,"out of range");
-        return (*ptr)[_curr];
-    }
-    string* operator->()const
-    {
-        return &this->operator*();
-    }
-
 };
 
 #endif

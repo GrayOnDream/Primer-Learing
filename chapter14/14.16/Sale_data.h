@@ -101,11 +101,6 @@ public:
         return is;
     }
 
-    string operator string()const
-    {
-        return to_string(_bookNo)+to_string(_unit_qutity)+to_string(get_averge());
-    }
-
     Sale_data &operator+=(const Sale_data &data)
     {
         this->combine(data);

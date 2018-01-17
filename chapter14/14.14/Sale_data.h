@@ -25,8 +25,6 @@ class Sale_data
     friend istream& operator>>(istream &is, Sale_data &data);
     friend ostream& operator<<(ostream &os, const Sale_data &data);
     friend Sale_data& operator+(const Sale_data &rst, const Sale_data &snd);
-    friend bool operator==(const Sale_data &rst, const Sale_data &snd);
-    friend bool operator!=(const Sale_data &rst,const Sale_data &snd);
 private:
     string _bookNo;
     double _revenue;
@@ -101,11 +99,6 @@ public:
         return is;
     }
 
-    string operator string()const
-    {
-        return to_string(_bookNo)+to_string(_unit_qutity)+to_string(get_averge());
-    }
-
     Sale_data &operator+=(const Sale_data &data)
     {
         this->combine(data);
@@ -149,15 +142,4 @@ Sale_data& operator+(const Sale_data &rst, const Sale_data &snd)
     return sum;
 }
 
-bool operator==(const Sale_data &rst, const Sale_data &snd)
-{
-    return rst._bookNo == snd._bookNo &&
-           rst._revenue == snd._revenue &&
-           rst._unit_qutity == snd._unit_qutity;
-}
-
-bool operator!=(const Sale_data &rst,const Sale_data &snd)
-{
-    return !(rst == snd);
-}
 #endif //_SALE_DATA_H_

@@ -95,22 +95,6 @@ StrVector &StrVector::operator=(const StrVector &vec)
     return *this;
 }
 
-string& StrVector::operator[](size_t size)
-{
-    if(size <= (_end - _begin))
-    {
-       return *(_begin + size);
-    }
-}
-
-const string& StrVector::operator[](size_t size)const
-{
-    if(size <= (_end - _begin))
-    {
-        return *(_begin + size);
-    }
-}
-
 StrVector::StrVector(StrVector &&vec)noexcept
     :_begin(vec._begin),_end(vec._end),_real_end(vec._real_end) 
 {
