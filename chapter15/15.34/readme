@@ -1,0 +1,17 @@
+all the files can not build successfully!
+may be fixed sometime later
+just know that Query is the only interface which is faced to users,others is used to hidden all the detail!
+QueryBase---------------->QueryWord
+  ^      \
+  |       \--------------->QueryBinary------------>QueryAnd
+  |        \                         \
+  |         \                         \----------->QueryOr
+  |          \------------>QueryOr
+  |           \
+  |            \---------->QueryNot
+  |
+  |
+Query<---------------QueryResult
+   ^                      ^
+   |                      |
+   |------------------QueryText
