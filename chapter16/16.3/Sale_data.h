@@ -11,7 +11,6 @@
 
 #include <string>
 #include <iostream>
-#include <functional>
 
 using std::cout;
 using std::cin;
@@ -20,12 +19,9 @@ using std::istream;
 using std::ostream;
 using std::endl;
 using std::ends;
-using std::hash;
-using std::to_string;
 
 class Sale_data
 {
-    friend hash<Sale_data>;
     friend istream& operator>>(istream &is, Sale_data &data);
     friend ostream& operator<<(ostream &os, const Sale_data &data);
     friend Sale_data& operator+(const Sale_data &rst, const Sale_data &snd);
@@ -105,9 +101,9 @@ public:
         return is;
     }
 
-    const string toString() const
+    string operator string()const
     {
-        return string(_bookNo + std::to_string(_unit_qutity) + std::to_string(get_averge()));
+        return to_string(_bookNo)+to_string(_unit_qutity)+to_string(get_averge());
     }
 
     Sale_data &operator+=(const Sale_data &data)

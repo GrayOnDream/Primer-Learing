@@ -1,48 +1,58 @@
 /*************************************************************************
-	> File Name: StrVector.cpp
+	> File Name: Vec.cpp
 	> Author: 
 	> Description: 
 	> Mail: 
 	> Created Time: 2018年01月16日 星期二 03时50分11秒
  ************************************************************************/
-#include "StrVector.h"
+#include "Vec.h"
 
-allocator<string> StrVector::_alloc;
-StrVector::StrVector():_begin(nullptr),_end(nullptr),_real_end(nullptr)
+template<typename T>
+allocator<T> Vec<T>::_alloc;
+
+template<typename T>
+Vec<T>::Vec():_begin(nullptr),_end(nullptr),_real_end(nullptr)
 {}
 
-size_t StrVector::size() const
+template<typename T>
+size_t Vec<T>::size() const
 {
     return _end - _begin;
 }
 
-size_t StrVector::capacity() const
+template<typename T>
+size_t Vec<T>::capacity() const
 {
     return _real_end - _begin;
 }
 
-string *StrVector::begin() const
+template<typename T>
+T *Vec<T>::begin() const
 {
     return _begin;
 }
 
-string *StrVector::end() const
+template<typename T>
+T *Vec<T>::end() const
 {
     return _end;
 }
 
-pair<string*, string*> StrVector::allocate_n_copy(const string *beg, const string *ed)
+template<typename T>
+pair<T*, T*> Vec<T>::allocate_n_copy(const T *beg, const T *ed)
 {
     auto data = _alloc.allocate(ed - beg);
-    return pair<string*,string*>(data, uninitialized_copy(beg, ed, data));
+    return pair<T*,T*>(data, uninitialized_copy(beg, ed, data));
 }
 
-void StrVector::check_n_allocate()
+template<typename T>
+void Vec<T>::check_n_allocate()
 {
     if(size() == capacity()) reallocate();
 }
 
-void StrVector::free()
+template<typename T>
+void Vec<T>::free()
 {
     if(_begin)
     {
@@ -57,27 +67,31 @@ void StrVector::free()
 }
 
 
-void StrVector::push_back(const string &str)
+template<typename T>
+void Vec<T>::push_back(const T &str)
 {
     check_n_allocate();
     _alloc.construct(_end ++, str);
 }
 
-StrVector::StrVector(const StrVector &vec)
+template<typename T>
+Vec<T>::Vec(const Vec &vec)
 {
     auto ptr = allocate_n_copy(vec.begin(),vec.end());
     _begin = ptr.first;
     _end = _real_end = ptr.second;
 }
 
-StrVector::StrVector(const initializer_list<string> lst)
+template<typename T>
+Vec<T>::Vec(const initializer_list<T> lst)
 {
     auto ptr = allocate_n_copy(lst.begin(),lst.end());
     _begin = ptr.first;
     _end = _real_end = ptr.second;
 }
 
-StrVector& StrVector::operator=(const initializer_list<string> lst)
+template<typename T>
+Vec<T>& Vec<T>::operator=(const initializer_list<T> lst)
 {
     auto ptr = allocate_n_copy(lst.begin(),lst.end());
     free();
@@ -86,7 +100,8 @@ StrVector& StrVector::operator=(const initializer_list<string> lst)
     return *this;
 }
 
-StrVector &StrVector::operator=(const StrVector &vec)
+template<typename T>
+Vec<T> &Vec<T>::operator=(const Vec &vec)
 {
     auto ptr = allocate_n_copy(vec.begin(),vec.end());
     free();
@@ -95,7 +110,8 @@ StrVector &StrVector::operator=(const StrVector &vec)
     return *this;
 }
 
-string& StrVector::operator[](size_t size)
+template<typename T>
+T& Vec<T>::operator[](size_t size)
 {
     if(size <= (_end - _begin))
     {
@@ -103,7 +119,8 @@ string& StrVector::operator[](size_t size)
     }
 }
 
-const string& StrVector::operator[](size_t size)const
+template<typename T>
+const T& Vec<T>::operator[](size_t size)const
 {
     if(size <= (_end - _begin))
     {
@@ -111,13 +128,15 @@ const string& StrVector::operator[](size_t size)const
     }
 }
 
-StrVector::StrVector(StrVector &&vec)noexcept
+template<typename T>
+Vec<T>::Vec(Vec &&vec)noexcept
     :_begin(vec._begin),_end(vec._end),_real_end(vec._real_end) 
 {
     vec._begin = vec._end = vec._real_end = nullptr;
 }
 
-StrVector &StrVector::operator=(StrVector &&vec)noexcept
+template<typename T>
+Vec<T> &Vec<T>::operator=(Vec &&vec)noexcept
 {
     if(_begin != nullptr)
     {
@@ -129,7 +148,8 @@ StrVector &StrVector::operator=(StrVector &&vec)noexcept
     }
 }
 
-void StrVector::reallocate()
+template<typename T>
+void Vec<T>::reallocate()
 {
     size_t newsize = size()?2 * size() : 4;
     auto first= _alloc.allocate(newsize);
@@ -142,7 +162,8 @@ void StrVector::reallocate()
     _real_end = _begin + newsize;
 }
 
-void StrVector::resize(size_t sz)
+template<typename T>
+void Vec<T>::resize(size_t sz)
 {
     size_t newsize = 0;
     if(sz < size()) return;
@@ -162,7 +183,8 @@ void StrVector::resize(size_t sz)
     
 }
 
-void StrVector::reserve()
+template<typename T>
+void Vec<T>::reserve()
 {
     for(auto i = 0;i < size()/2; i++)
     {
@@ -170,13 +192,8 @@ void StrVector::reserve()
     }
 }
 
-StrVector::~StrVector()
+template<typename T>
+Vec<T>::~Vec()
 {
     free();
-}
-template <class ... Args>
-void StrVector::emplace_back(Args && ...args)
-{
-    check_n_allocate();
-    _alloc.construct(_end ++, forward<Args>(args)...);
 }
